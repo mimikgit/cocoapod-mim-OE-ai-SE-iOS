@@ -6,23 +6,11 @@
 	<dict>
 		<key>Info.plist</key>
 		<data>
-		ZTi4YPERkDq06IwkdbrMMAc2krw=
-		</data>
-		<key>default.metallib</key>
-		<data>
-		WW9mmwH8joMBxapPrvoWHJUI5n8=
+		JCCX238sE0VPFBbH9c+DKc8iH2c=
 		</data>
 	</dict>
 	<key>files2</key>
-	<dict>
-		<key>default.metallib</key>
-		<dict>
-			<key>hash2</key>
-			<data>
-			R6tWQW9tyoosiBq/IeZ8MYBaxadv+AM0vnJ70aunwOA=
-			</data>
-		</dict>
-	</dict>
+	<dict/>
 	<key>rules</key>
 	<dict>
 		<key>^.*</key>

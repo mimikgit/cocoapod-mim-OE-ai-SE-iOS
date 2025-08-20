@@ -1,304 +1,169 @@
 # mimik Client Library
 
-The mimik Client Library provides a low-level, programmatic interface for interacting with the mim OE Runtime (formerly known as the edge engine). It enables direct control over runtime behavior and integration with decentralized edge-cloud workflows.
+The **mimik Client Library** is a unified SDK for integrating and managing **mimik OE** — a lightweight mimik operating environment enabling developers to build, deploy, and orchestrate microservices and AI-powered workflows across hybrid edge-cloud systems.
 
-## Quick Start
+It abstracts away the complexities of:
+- OAuth2 / JWT-based authentication
+- Network node discovery and orchestration
+- Lifecycle and configuration management for microservices
+- AI model integration, unified assistant streaming prompts
 
-- **Onboarding Tutorial**  
-    Step-by-step setup and usage guide:  
-    [https://devdocs.mimik.com/tutorials/01-submenu/02-submenu/02-index](https://devdocs.mimik.com/tutorials/01-submenu/02-submenu/02-index)
 
-- **API Documentation**  
-    Complete reference for available classes, methods, and usage patterns:  
-    [https://mimikgit.github.io/cocoapod-EdgeCore/documentation/edgecore/edgecore](https://mimikgit.github.io/cocoapod-EdgeCore/documentation/edgecore/edgecore)
+---
 
-## Features
+## 🚀 Getting Started
 
-The library exposes functionality to:
+The fastest way to get started:
 
-- Initialize and configure the mim OE Runtime, including local runtime setup, configuration loading, and lifecycle management
-- Discover and interact with nodes in a Hybrid Edge Cloud cluster using built-in discovery and service registration APIs
-- Deploy and manage RESTful microservices on the edge node using a lightweight container abstraction
-- Authenticate and authorize developers and services using token-based flows (OAuth2, JWT)
-- Integrate with on-device AI runtimes, allowing local invocation of Vision and Language models without requiring cloud access
+1. Follow the onboarding tutorial  
+   📘 [Step-by-Step Tutorial](https://devdocs.mimik.com/tutorials/01-submenu/02-submenu/02-index)
 
-## Runtime Characteristics
+2. Add the required pods to your `Podfile`:
+ 
+   ```ruby
+   platform :ios, '16.0'
+   source 'https://github.com/CocoaPods/Specs.git'
+   source 'https://github.com/mimikgit/cocoapod-edge-specs.git'
 
-- Written for resource-constrained environments (e.g., ARM-based devices, IoT gateways)
-- Supports offline-first and peer-to-peer communication paradigms
-- Built for decentralized orchestration across edge nodes in distributed environments
+   use_frameworks!
+   inhibit_all_warnings!
 
-## Use Case Examples
+   def mimik
+     pod 'EdgeCore'
+     pod 'mim-OE-ai-SE-iOS-developer'
+   end
 
-- Register and expose a microservice on a local node  
-- Query cluster topology and fetch metadata from peer nodes  
-- Secure communication between services using tokens  
-- Launch a local AI model for image or text inference
+   target 'YourAppTarget' do
+     mimik()
+   end
 
-This library is intended for developers building distributed edge-native apps where network reliability, low-latency processing, and on-device compute are critical.
+   post_install do |installer|
+     installer.pods_project.targets.each do |target|
+       target.build_configurations.each do |config|
+         config.build_settings['VALID_ARCHS'] = '$(ARCHS_STANDARD_64_BIT)'
+         config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '16.0'
+         config.build_settings['BUILD_LIBRARY_FOR_DISTRIBUTION'] = 'YES'
+       end
+     end
+   end
+   ```
 
-## mimik Client Library cocoapods
+3. Get your mim OE license key from the [mimik Developer Console](https://developer.mimik.com/console)
 
-**Bundle Configurations:** Developers now have more control over their deployments with new bundling options. You can choose to integrate the **mim OE Runtime** into your project based on your specific needs. This includes the flexibility to either include or exclude the AI Runtime, depending on whether your application requires it.
+---
 
-* [EdgeCore](https://github.com/mimikgit/cocoapod-EdgeCore) (required)
-* [mim-OE-ai-SE-iOS-developer](https://github.com/mimikgit/cocoapod-mim-OE-ai-SE-iOS-developer) (with AI Runtime)
-* [mim-OE-SE-iOS-developer](https://github.com/mimikgit/cocoapod-mim-OE-SE-iOS-developer) (no AI)
-* [EdgeService](https://github.com/mimikgit/cocoapod-EdgeService) (optional)
+## 💡 Key Concepts
 
-Generally speaking, developers only need to add the **`mim-OE-ai-SE-iOS-developer`** and **EdgeCore** cocoapods to their projects.
+**mim OE** (Operating Environment) is the runtime platform powering edge microservices and AI workloads. It can run on iOS devices, simulators, or macOS using Catalyst. The Client Library gives you direct control over:
 
+- Service deployment
+- Runtime lifecycle
+- AI model execution
+- Secure communication and auth
 
-## Supported Platforms, Targets
-* `iOS Devices running iOS 16+`
-* `iOS Simulators running iOS 16+`
-* `iOS Mac Catalyst running macOS 14.0`
+---
 
+## ✨ Features Overview
 
-## Requirements
-```
-iOS 16.0+
-```
+The mimik Client Library provides a unified API to:
 
-## Installation
+### 🔧 Initialize and Control mim OE
+- Start, stop, and monitor the mim OE runtime
+- Configure logging, runtime health, and startup parameters
 
-To get started, simply incorporate a configuration such as this to your Podfile:
+### 🔐 Authenticate Developers and Users
+- OAuth2-compliant developer and user login
+- Support for token exchange, scopes, signup/login flows
+- Handle account recovery, password changes, and deletions
 
+### 🌍 Discover & Orchestrate Edge Nodes
+- Auto-discover available edge nodes
+- Route requests across hybrid clusters
+- Register and manage services
 
-```swift
-platform :ios, '16.0'
-source 'https://github.com/CocoaPods/Specs.git'
-source 'https://github.com/mimikgit/cocoapod-edge-specs.git'
+### 📦 Deploy & Manage Microservices
+- Deploy microservices or full use-case workflows
+- Package using container-style config and update dynamically
+- Scale, tear down, or update services via API
 
-use_frameworks!
-inhibit_all_warnings!
+### 🤖 Unified AI Model Integration
+- List available AI models across device, edge, and cloud
+- Use a single interface to prompt vision and language models
 
-def mimik
-  pod 'EdgeCore'
-  pod 'mim-OE-ai-SE-iOS-developer'
-end
+### 🔁 Stream AI Prompts & Responses
+- Send prompts and receive streaming replies
+- Handle user-initiated prompt cancellations cleanly
 
-target '{target}' do
-  mimik()
-end
+### 📋 Standardized AI Outputs
+- Unified output handling via `AssistantOutput`
+- Supports chat UI, system automation, and batch processing
 
-post_install do |installer|
-  installer.pods_project.targets.each do |target|
-    target.build_configurations.each do |config|
-      config.build_settings['VALID_ARCHS'] = '$(ARCHS_STANDARD_64_BIT)'
-      config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '16.0'
-      config.build_settings['BUILD_LIBRARY_FOR_DISTRIBUTION'] = 'YES'
-    end
-  end
-end
-```
+---
 
-> **_NOTE:_** Developers can get their **developer edge license** for initializing [mim-OE-ai-SE-iOS-developer](https://github.com/mimikgit/cocoapod-mimOE-SE-iOS-developer) at the [mimik developer console](https://developer.mimik.com/console).
+## 📦 Pod Distribution
 
-> **_NOTE:_** Enterprise project developers should request their **enterprise edge license** from [mimik support](https://developer.mimik.com/support/).
+Use the table below to choose the CocoaPods that best match your use case:
 
+| Pod | Includes | AI Support | Recommended For |
+|-----|----------|------------|------------------|
+| [`EdgeCore`](https://github.com/mimikgit/cocoapod-EdgeCore) | Core |  | Always include |
+| [`mim-OE-SE-iOS-developer`](https://github.com/mimikgit/cocoapod-mim-OE-SE-iOS-developer) | Core + mim OE | ❌ | Lightweight, non-AI apps |
+| [`mim-OE-ai-SE-iOS-developer`](https://github.com/mimikgit/cocoapod-mim-OE-ai-SE-iOS-developer) | Core + mim OE + AI | ✅ | Vision/Language AI support |
+| [`EdgeService`](https://github.com/mimikgit/cocoapod-EdgeService) | Deployment tools |  | For managing custom microservices |
 
-## Documentation
+> **✅ Recommended Default:** Add `EdgeCore` and `mim-OE-ai-SE-iOS-developer` to your Podfile.
 
-`EdgeCore/EdgeClient` API reference documentation can be found  [here](https://mimikgit.github.io/cocoapod-EdgeCore/documentation/edgecore/edgeclient). Alternatively a docc archive file can be downloaded as a [zip file](https://github.com/mimikgit/cocoapod-EdgeCore/tree/main/EdgeCore.doccarchive.zip) and opened locally in Xcode.
-
-`EdgeEngineClient` platform protocol API reference documentation is [here](https://mimikgit.github.io/cocoapod-EdgeCore/documentation/edgecore/edgeengineclient).
-
-`EdgeService` API references are available [here](https://mimikgit.github.io/cocoapod-EdgeService/documentation/edgeservice/).
-
-
-## EdgeClient
-
-### Authentication
-
-- ``EdgeClient/authorizeDeveloper(developerIdToken:edgeEngineIdToken:)``
-- ``EdgeClient/authorizeUser(email:password:edgeEngineIdToken:service:)``
-- ``EdgeClient/authorizeUser(phoneNumber:edgeEngineIdToken:service:)``
-- ``EdgeClient/validateUser(codes:edgeEngineIdToken:service:)``
-- ``EdgeClient/signup(email:password:edgeEngineIdToken:service:)``
-- ``EdgeClient/validateSignup(codes:password:edgeEngineIdToken:service:)``
-- ``EdgeClient/authorizeBackendUse(authorization:service:)``
-- ``EdgeClient/authorizeBackendUse(federatedToken:policyId:edgeEngineIdToken:service:)``
-- ``EdgeClient/authenticationScopes(serverUrl:)``
-
-### Account Management
-
-- ``EdgeClient/accountInformation(service:authorization:)``
-- ``EdgeClient/passwordReset(email:edgeEngineIdToken:service:)``
-- ``EdgeClient/validatePasswordReset(codes:newPassword:edgeEngineIdToken:service:)``
-- ``EdgeClient/passwordChange(email:currentPassword:newPassword:edgeEngineIdToken:service:)``
-- ``EdgeClient/deleteAccount(email:password:edgeEngineIdToken:service:)``
-- ``EdgeClient/validateDeleteAccount(codes:password:edgeEngineIdToken:service:)``
-- ``EdgeClient/executeDeleteAccount(authorization:service:)``
-
-### Environment
-
-- ``EdgeClient/edgeEngineIdToken()``
-- ``EdgeClient/edgeEngineInfo()``
-- ``EdgeClient/externalEdgeEngineIsRunning()``
-- ``EdgeClient/edgeEngineFullPathUrl()``
-
-### Edge microservices
-
-- ``EdgeClient/deployUseCase(accessToken:configUrl:dynamicConfig:)``
-- ``EdgeClient/deployMicroservice(edgeEngineAccessToken:config:imageTarPath:)``
-- ``EdgeClient/microservices(edgeEngineAccessToken:)``
-- ``EdgeClient/microservice(containerName:edgeEngineAccessToken:)``
-- ``EdgeClient/updateMicroserviceEnv(edgeEngineAccessToken:microservice:envVariables:)``
-- ``EdgeClient/undeployMicroservice(edgeEngineAccessToken:microservice:)``
-
-### EdgeClient Type
-
-- ``EdgeClient/activateExternalEdgeEngine(host:port:)``
-- ``EdgeClient/deactivateExternalEdgeEngine()``
-- ``EdgeClient/edgeEngineWorkingDirectory()``
-- ``EdgeClient/externalEdgeEngineIsActivated()``
-- ``EdgeClient/setLoggingLevel(module:level:privacy:)``
-
-
-## EdgeClient/AI
-
-- ``EdgeClient/integrateAI(accessToken:apiKey:configUrl:model:downloadHandler:requestHandler:)``
-- ``EdgeClient/downloadAI(model:accessToken:apiKey:useCase:downloadHandler:requestHandler:)``
-- ``EdgeClient/chatAI(request:streamHandler:requestHandler:)``
-- ``EdgeClient/chatAI(request:requestHandler:)``
-- ``EdgeClient/aiModels(accessToken:apiKey:useCase:)``
-- ``EdgeClient/aiModel(id:accessToken:apiKey:useCase:)``
-- ``EdgeClient/deleteAIModel(id:accessToken:apiKey:useCase:)``
-- ``EdgeClient/warmUpAI(request:)``
-
-
-## EdgeClient/Authorization/AccessToken
-
-- ``EdgeClient/Authorization/AccessToken/clientId(token:)``
-- ``EdgeClient/Authorization/AccessToken/decodeToJWT(token:)``
-- ``EdgeClient/Authorization/AccessToken/decodeToJson(token:)``
-- ``EdgeClient/Authorization/AccessToken/expiresIn(token:)``
-- ``EdgeClient/Authorization/AccessToken/subscriber(token:)``
-- ``EdgeClient/Authorization/AccessToken/validate(token:)``
-- ``EdgeClient/Authorization/AccessToken/valueFrom(key:)``
-
-## EdgeClient/Document
-- ``EdgeClient/Document/filenameExtensionFor(type:)``
-- ``EdgeClient/Document/filenameExtentionFor(mimeType:)``
-- ``EdgeClient/Document/mimeTypeFor(filenameExtension:)``
-- ``EdgeClient/Document/mimeTypeFor(type:)``
-- ``EdgeClient/Document/uttypeFor(filenameExtension:)``
-- ``EdgeClient/Document/uttypeFor(mimeType:)``
-
-
-## EdgeClient/Log
-- ``EdgeClient/Log/log(level:function:line:items:module:marker:)``
-- ``EdgeClient/Log/logDebug(function:line:items:module:marker:)``
-- ``EdgeClient/Log/logError(function:line:items:module:marker:)``
-- ``EdgeClient/Log/logFault(function:line:items:module:marker:)``
-- ``EdgeClient/Log/logInfo(function:line:items:module:marker:)``
-- ``EdgeClient/Log/loggingLevel(module:)``
-- ``EdgeClient/Log/loggingPrivacy(module:)``
-
-
-## EdgeClient/Microservice
-- ``EdgeClient/Microservice/basePath()``
-- ``EdgeClient/Microservice/call(config:)``
-- ``EdgeClient/Microservice/call(config:type:)``
-- ``EdgeClient/Microservice/call(config:requestHandler:)``
-- ``EdgeClient/Microservice/call(config:type:requestHandler:)``
-- ``EdgeClient/Microservice/callStream(config:streamHandler:requestHandler:)``
-- ``EdgeClient/Microservice/callStream(config:type:streamHandler:requestHandler:)``
-- ``EdgeClient/Microservice/callStreamSSE(config:streamHandler:requestHandler:)``
-- ``EdgeClient/Microservice/urlComponents()``
-- ``EdgeClient/Microservice/urlComponents(withEndpoint:)``
-- ``EdgeClient/Microservice/expectedDeployedBasePath(path:clientId:)``
-- ``EdgeClient/Microservice/expectedDeployedImageId(imageName:clientId:)``
-- ``EdgeClient/Microservice/expectedDeployedContainerId(containerName:clientId:)``
-- ``EdgeClient/Microservice/preferredBasePath(path:)``
-- ``EdgeClient/Microservice/preferredConfig(imageName:containerName:basePath:edgeEngineFullPathUrl:clientId:envVariables:signatureKey:ownerCode:)``
-- ``EdgeClient/Microservice/preferredContainerName(name:)``
-- ``EdgeClient/Microservice/preferredImageName(name:)``
-
-## EdgeClient/Microservice/Container
-- ``EdgeClient/Microservice/Container/basePath()
-
-## EdgeClient/Microservice/Request
-- ``EdgeClient/Microservice/Request/microserviceRequest(microservice:path:method:queryItems:authorization:httpBody:httpHeaders:timeoutInterval:cachePolicy:)``
-
-
-## EdgeClient/Node
-- ``EdgeClient/Node/effectiveUrl()``
-- ``EdgeClient/Node/preferredNodeName()``
-
-
-## EdgeClient/Request
-- ``EdgeClient/Request/downloadContent(sourceUrl:destinationFileUrl:progressHandler:)``
-- ``EdgeClient/Request/downloadImageContent(sourceUrl:)``
-- ``EdgeClient/Request/exportVideo(session:outputURL:outFileType:)``
-- ``EdgeClient/Request/uploadContent(sourceFileUrl:destinationUrl:mimeType:progressHandler:)``
-- ``EdgeClient/Request/authorizedRequest(url:method:authorization:httpHeaders:httpBody:contentType:)``
-- ``EdgeClient/Request/call(config:)``
-- ``EdgeClient/Request/call(config:type:)``
-- ``EdgeClient/Request/decode(_:from:)``
-
-## EdgeClient/Request/URLComponentsBuilder
-- ``EdgeClient/Request/URLComponentsBuilder/create()``
-- ``EdgeClient/Request/URLComponentsBuilder/set(components:)``
-- ``EdgeClient/Request/URLComponentsBuilder/set(scheme:host:port:path:)``
-- ``EdgeClient/Request/URLComponentsBuilder/set(scheme:host:port:)``
-- ``EdgeClient/Request/URLComponentsBuilder/set(scheme:)``
-- ``EdgeClient/Request/URLComponentsBuilder/set(host:)``
-- ``EdgeClient/Request/URLComponentsBuilder/set(password:)``
-- ``EdgeClient/Request/URLComponentsBuilder/set(path:)``
-- ``EdgeClient/Request/URLComponentsBuilder/set(port:)``
-- ``EdgeClient/Request/URLComponentsBuilder/set(query:)``
-- ``EdgeClient/Request/URLComponentsBuilder/set(queryItems:)``
-- ``EdgeClient/Request/URLComponentsBuilder/set(user:)``
-- ``EdgeClient/Request/URLComponentsBuilder/set(fragment:)``
-- ``EdgeClient/Request/URLComponentsBuilder/append(path:)``
-
-
-## EdgeClient/Service
-- ``EdgeClient/Service/healthCheck()``
-- ``EdgeClient/Service/urlComponents()``
-- ``EdgeClient/Service/versionCheck(requireMatch:)``
-
-
-## EdgeEngineClient protocol
-    
-Provides mim OE (edgeEngine) controls and vendors the actual mim OE (edgeEngine) binary into the project.
-
-> **To enable EdgeEngineClient** protocol API in the project, add [EdgeEngineDeveloper](https://github.com/mimikgit/cocoapod-EdgeEngineDeveloper) or [EdgeEngine](https://github.com/mimikgit/cocoapod-EdgeEngine) to the `Podfile`.
-
-- ``EdgeEngineClient/startEdgeEngine(parameters:)``
-- ``EdgeEngineClient/stopEdgeEngine()``
-- ``EdgeEngineClient/restartEdgeEngine()``
-- ``EdgeEngineClient/resetEdgeEngine()``
-- ``EdgeEngineClient/edgeEngineIsRunning()``
-- ``EdgeEngineClient/edgeEngineLifecycleIsManaged()``
-- ``EdgeEngineClient/edgeEngineParameters()``
-- ``EdgeEngineClient/manageEdgeEngineLifecycle(manage:)``
-- ``EdgeEngineClient/expectedEdgeEngineVersion()``
-- ``EdgeEngineClient/setCustomPort(number:)``
-
-
-## Tutorials
-
-After installation, try the following tutorials:
-
-- [Understanding the mimik Client Library for iOS](https://devdocs.mimik.com/key-concepts/10-index).
-- [Creating a Simple iOS Application that Uses an edge microservice](https://devdocs.mimik.com/tutorials/01-submenu/02-submenu/01-index).
-- [Integrating the mimik Client Library into an iOS project](https://devdocs.mimik.com/tutorials/01-submenu/02-submenu/02-index).
-- [Working with mimOE in an iOS project](https://devdocs.mimik.com/tutorials/01-submenu/02-submenu/03-index).
-- [Working with edge microservices in an iOS project](https://devdocs.mimik.com/tutorials/01-submenu/02-submenu/04-index).
-
-
-## Author
-
-[mimik Technology, Inc.](https://mimik.com)
-
-More details about how the edgeEngine platform revolutionizes computing with the hybrid-cloud approach are at [mimik Developer Documentation](https://devdocs.mimik.com).
-
-
-## License
-
-Developers can get their developer edge license by following this [tutorial](https://devdocs.mimik.com/tutorials/01-submenu/02-submenu/03-index).
-
-For details about an enterprise edge license please contact [mimik support](https://mimik.com/contact-us/).
+---
+
+## 📱 Supported Platforms
+
+- **iOS Devices:** iOS 16.0+
+- **iOS Simulators:** iOS 16.0+
+- **Mac Catalyst:** macOS 14.0+
+
+---
+
+## 📄 Documentation
+
+- **API Reference (EdgeCore):**  
+  [EdgeClient Reference](https://mimikgit.github.io/cocoapod-EdgeCore/documentation/edgecore/edgeclient)  
+  [EdgeEngineClient Protocol](https://mimikgit.github.io/cocoapod-EdgeCore/documentation/edgecore/edgeengineclient)
+
+- **EdgeService Reference:**  
+  [EdgeServiceClient Docs](https://mimikgit.github.io/cocoapod-EdgeService/documentation/edgeservice)
+
+- All APIs are also documented in Xcode with built-in method and struct descriptions.
+
+---
+
+## 🧪 Tutorials by Use Case
+
+### ▶️ Get Started
+- [Understanding the mimik Client Library for iOS](https://devdocs.mimik.com/key-concepts/10-index)
+
+### 🛠️ Build Apps
+- [Creating a Simple iOS App Using an Edge Microservice](https://devdocs.mimik.com/tutorials/01-submenu/02-submenu/01-index)
+- [Integrating the mimik Client Library into Your iOS Project](https://devdocs.mimik.com/tutorials/01-submenu/02-submenu/02-index)
+
+### ⚙️ Work with Runtime
+- [Working with mim OE in an iOS Project](https://devdocs.mimik.com/tutorials/01-submenu/02-submenu/03-index)
+
+### 📦 Manage Microservices
+- [Deploying Edge Microservices](https://devdocs.mimik.com/tutorials/01-submenu/02-submenu/04-index)
+
+---
+
+## 📜 Licensing
+
+To initialize `mim-OE-ai-SE-iOS-developer`, obtain a license key at:  
+🔐 [mimik Developer Console](https://developer.mimik.com/console)
+
+For enterprise projects or commercial distribution, contact:  
+💼 [mimik Support](https://mimik.com/contact-us/)
+
+---
+
+## 👤 Author
+
+[mimik](https://mimik.com)  
+Learn more at [mimik Developer Documentation](https://devdocs.mimik.com)
